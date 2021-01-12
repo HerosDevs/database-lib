@@ -98,7 +98,7 @@ public class Notes {
             targetBuilder.append(targetValue);
         }
 
-        stringBuilder.append(" WHERE ").append(target).append(" = \"").append(targetBuilder).append("\";");
+        stringBuilder.append(" WHERE ").append(target).append(" = ").append(targetBuilder).append(";");
 
         return stringBuilder.toString();
     }
