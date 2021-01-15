@@ -44,7 +44,11 @@ public class Musician extends Thread {
     }
 
     public void play() {
-        running = !running;
+        if (running) {
+            throw new IllegalThreadStateException(currentThread().getName() + " is already running! " +
+                    "A solution to this is to create a new Musician() and give him the same Instrument!");
+        }
+        running = true;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class Musician extends Thread {
         try {
             while (true) {
                 if (!running) {
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                     continue;
                 }
                 System.out.println("[database-lib] JOB ON " + currentThread().getName() + " STARTED!");
