@@ -19,7 +19,11 @@ public class Notes {
         return "SELECT " + field + " FROM " + table + ";";
     }
 
-    public String selectWhere(String field, Object value) {
+    public String selectWhere(String target, Object value) {
+        return selectWhere(target, target, value);
+    }
+
+    public String selectWhere(String target, String field, Object value) {
         String string;
 
         if (value instanceof String) {
@@ -30,7 +34,7 @@ public class Notes {
             string = String.valueOf(value);
         }
 
-        return "SELECT " + field + " FROM " + table + " WHERE " + field + " = " + string + ";";
+        return "SELECT " + target + " FROM " + table + " WHERE " + field + " = " + string + ";";
     }
 
     public String insert(String[] fields, Object[] values) {
