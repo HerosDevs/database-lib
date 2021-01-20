@@ -1,84 +1,135 @@
 package net.herospvp.database;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import net.herospvp.database.items.Instrument;
 import net.herospvp.database.items.Papers;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
+@SuppressWarnings({"BusyWait"})
 public class Musician extends Thread {
 
-    @Getter
-    private Queue<Papers> mirrorQueuePapers;
-    @Getter
-    private boolean running = false;
-    @Getter
-    private Instrument instrument;
+    private final Director director;
 
-    public Musician(Instrument instrument) {
+    @Getter
+    private Queue<Papers> queuePapers, mirrorQueuePapers;
+    @Getter
+    private final Instrument instrument;
+    @Getter
+    @Setter
+    private int checkEvery;
+    @Getter
+    @Setter
+    private boolean debugMode;
+    private boolean stopSignal;
+    @Getter
+    private boolean running;
+
+    public Musician(Director director, Instrument instrument) {
+        this.director = director;
         this.instrument = instrument;
+
+        commonInit();
+    }
+
+    public Musician(Director director, Instrument instrument, boolean debugMode) {
+        this.director = director;
+        this.instrument = instrument;
+        this.debugMode = debugMode;
+
+        commonInit();
+
+        if (debugMode)
+            System.out.println("[database-lib] Musician created! (" + 1000 / checkEvery + "/s)");
+    }
+
+    private void commonInit() {
+        this.checkEvery = 500;
+        this.queuePapers = new LinkedList<>();
         this.mirrorQueuePapers = new LinkedList<>();
         this.start();
+        director.addMusician(this);
     }
 
-    @Deprecated
-    public Musician(String string) {
-        this.start();
+
+    public void update(@Nullable Papers papers) {
+        if (papers == null) return;
+        queuePapers.add(papers);
     }
 
-    public void updateMirror(Papers papers) {
-        this.mirrorQueuePapers.add(papers);
+    public void update(@NotNull Queue<Papers> queuePapers) {
+        for (Papers paper : queuePapers)
+            update(paper);
     }
 
-    public void updateMirror(Queue<Papers> mirrorQueuePapers) {
-        this.mirrorQueuePapers = mirrorQueuePapers;
+
+    private void updateMirror(@Nullable Papers papers) {
+        if (papers == null) return;
+        mirrorQueuePapers.add(papers);
     }
 
-    public void clearMirror() {
-        this.mirrorQueuePapers.clear();
+    private void updateMirror(@NotNull Queue<Papers> queuePapers) {
+        for (Papers paper : queuePapers)
+            updateMirror(paper);
     }
+
+    private void clearMirror() {
+        mirrorQueuePapers.clear();
+    }
+
 
     public void play() {
-        if (running) {
-            throw new IllegalThreadStateException(currentThread().getName() + " is already running! " +
-                    "A solution to this is to create a new Musician() and give him the same Instrument!");
-        }
         running = true;
     }
+
+    public void announceEnd() {
+        stopSignal = true;
+    }
+
 
     @Override
     public void run() {
         try {
-            while (true) {
+            long time = 0;
+
+            while (!stopSignal) {
+
                 if (!running) {
-                    Thread.sleep(500);
+                    Thread.sleep(checkEvery);
                     continue;
                 }
-                System.out.println("[database-lib] JOB ON " + currentThread().getName() + " STARTED!");
+
+                if (debugMode) {
+                    time = System.currentTimeMillis();
+                    System.out.println("[database-lib] JOB ON " + currentThread().getName() + " STARTED!");
+                }
+
+                updateMirror(queuePapers);
 
                 Connection connection = null;
                 try {
-
                     connection = instrument.getDataSource().getConnection();
 
-                    for (Papers paper : mirrorQueuePapers) {
+                    for (Papers paper : mirrorQueuePapers)
                         paper.writePaper(connection, instrument);
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     instrument.close(connection, null, null);
+                    running = false;
                 }
                 clearMirror();
 
-                System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED!");
-                running = false;
+                if (debugMode)
+                    System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
+                            +(System.currentTimeMillis() - time) / 1000 + "ms)");
+
             }
         } catch (Exception e) {
             e.printStackTrace();

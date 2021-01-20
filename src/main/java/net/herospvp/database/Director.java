@@ -2,23 +2,23 @@ package net.herospvp.database;
 
 import lombok.Getter;
 import net.herospvp.database.items.Instrument;
-import net.herospvp.database.items.Papers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class Director {
 
     @Getter
     private final Map<String, Instrument> instrumentsCollection;
     @Getter
-    private final Queue<Papers> papersQueue;
+    private final Collection<Musician> musicians;
 
     public Director() {
         this.instrumentsCollection = new HashMap<>();
-        this.papersQueue = new LinkedList<>();
+        this.musicians = new ArrayList<>();
+        System.out.println("[database-lib] Currently using version: 1.1.0-SNAPSHOT");
     }
 
     public void addInstrument(String name, Instrument instrument) {
@@ -31,6 +31,15 @@ public class Director {
 
     public Instrument getInstrument(String name) {
         return instrumentsCollection.get(name);
+    }
+
+    public void addMusician(Musician musician) {
+        musicians.add(musician);
+    }
+
+    public void endShow() {
+        for (Musician musician : musicians)
+            musician.announceEnd();
     }
 
 }

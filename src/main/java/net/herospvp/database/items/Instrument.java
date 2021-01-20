@@ -60,40 +60,19 @@ public class Instrument {
         dataSource = new HikariDataSource(config);
     }
 
-    public void execute(String statement) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(connection, preparedStatement, null);
-        }
-    }
-
-    public void execute(String[] statements) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            for (String statement : statements) {
-                preparedStatement = connection.prepareStatement(statement);
-                preparedStatement.execute();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(connection, preparedStatement, null);
-        }
-    }
-
     public void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
-        if (connection != null) try { connection.close(); } catch (Exception ignored) {}
-        if (preparedStatement != null) try { preparedStatement.close(); } catch (Exception ignored) {}
-        if (resultSet != null) try { resultSet.close(); } catch (Exception ignored) {}
+        if (connection != null) try {
+            connection.close();
+        } catch (Exception ignored) {
+        }
+        if (preparedStatement != null) try {
+            preparedStatement.close();
+        } catch (Exception ignored) {
+        }
+        if (resultSet != null) try {
+            resultSet.close();
+        } catch (Exception ignored) {
+        }
     }
 
 }
