@@ -1,11 +1,11 @@
 package net.herospvp.database;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import net.herospvp.database.items.Instrument;
 import net.herospvp.database.items.Papers;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.util.LinkedList;
