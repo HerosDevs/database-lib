@@ -128,7 +128,7 @@ public class Musician extends Thread {
 
                 if (debugMode)
                     System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
-                            +(System.currentTimeMillis() - time) / 1000 + "ms)");
+                            + (System.currentTimeMillis() - time) / 1000.0 + "s)");
 
             }
         } catch (Exception e) {
