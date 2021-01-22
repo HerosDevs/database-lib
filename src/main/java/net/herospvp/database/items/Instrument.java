@@ -36,15 +36,6 @@ public class Instrument {
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-            // additional flags from hikari repo for mysql
-            config.addDataSourceProperty("useServerPrepStmts", "true");
-            config.addDataSourceProperty("useLocalSessionState", "true");
-            config.addDataSourceProperty("rewriteBatchedStatements", "true");
-            config.addDataSourceProperty("cacheResultSetMetadata", "true");
-            config.addDataSourceProperty("cacheServerConfiguration", "true");
-            config.addDataSourceProperty("elideSetAutoCommits", "true");
-            config.addDataSourceProperty("maintainTimeStats", "false");
         }
 
         if (poolSize != 0) {
