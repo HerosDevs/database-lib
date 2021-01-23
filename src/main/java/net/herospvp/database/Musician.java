@@ -115,6 +115,10 @@ public class Musician extends Thread {
                 try {
                     connection = instrument.getDataSource().getConnection();
 
+                    if (debugMode)
+                        System.out.println("[database-lib] GET CONNECTION TOOK " +
+                                (System.currentTimeMillis() - time) / 1000.0 + "s");
+
                     for (Papers paper : mirrorQueuePapers)
                         paper.writePaper(connection, instrument);
 

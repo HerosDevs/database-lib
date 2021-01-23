@@ -41,7 +41,9 @@ public class Instrument {
         if (poolSize != 0) {
             config.setMaximumPoolSize(poolSize);
         } else {
-            config.setMaximumPoolSize(10);
+            int count = Runtime.getRuntime().availableProcessors() * 2;
+            System.out.println("[database-lib] Using default max-pool-size: " + count);
+            config.setMaximumPoolSize(count);
         }
 
         if (properties != null) {
