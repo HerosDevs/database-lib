@@ -78,8 +78,10 @@ public class Musician extends Thread {
             updateMirror(paper);
     }
 
-    private void clearMirror() {
-        mirrorQueuePapers.clear();
+    private void clearQueues() {
+        for (Papers paper : mirrorQueuePapers) {
+            queuePapers.remove(paper);
+        }
     }
 
 
@@ -128,7 +130,7 @@ public class Musician extends Thread {
                     instrument.close(connection, null, null);
                     running = false;
                 }
-                clearMirror();
+                clearQueues();
 
                 if (debugMode)
                     System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
