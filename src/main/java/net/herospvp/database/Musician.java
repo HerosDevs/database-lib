@@ -82,6 +82,7 @@ public class Musician extends Thread {
         for (Papers paper : mirrorQueuePapers) {
             queuePapers.remove(paper);
         }
+        mirrorQueuePapers.clear();
     }
 
 
@@ -110,7 +111,6 @@ public class Musician extends Thread {
                     time = System.currentTimeMillis();
                     System.out.println("[database-lib] JOB ON " + currentThread().getName() + " STARTED!");
                 }
-
                 updateMirror(queuePapers);
 
                 Connection connection = null;
@@ -118,7 +118,7 @@ public class Musician extends Thread {
                     connection = instrument.getDataSource().getConnection();
 
                     if (debugMode)
-                        System.out.println("[database-lib] GET CONNECTION TOOK " +
+                        System.out.println("[database-lib] GETTING CONNECTION TOOK " +
                                 (System.currentTimeMillis() - time) / 1000.0 + "s");
 
                     for (Papers paper : mirrorQueuePapers)
@@ -129,13 +129,12 @@ public class Musician extends Thread {
                 } finally {
                     instrument.close(connection, null, null);
                     running = false;
+                    clearQueues();
+
+                    if (debugMode)
+                        System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
+                                + (System.currentTimeMillis() - time) / 1000.0 + "s)");
                 }
-                clearQueues();
-
-                if (debugMode)
-                    System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
-                            + (System.currentTimeMillis() - time) / 1000.0 + "s)");
-
             }
         } catch (Exception e) {
             e.printStackTrace();
