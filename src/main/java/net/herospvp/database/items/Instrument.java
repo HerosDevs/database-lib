@@ -16,9 +16,10 @@ public class Instrument {
     @Getter
     private final DataSource dataSource;
     @Getter
-    private final String ip, port, user, password, database;
+    private final String ip, port, user, password, database, flags, url, driverClassName;
 
     public Instrument(String ip, String port, String user, String password, String database, @Nullable String flags,
+                      @Nullable String url, @Nullable String driverClassName,
                       @Nullable Map<String, String> properties, boolean useDefaults, int poolSize) {
 
         this.ip = ip;
@@ -26,9 +27,22 @@ public class Instrument {
         this.user = user;
         this.password = password;
         this.database = database;
+        this.flags = flags;
+        this.url = url;
+        this.driverClassName = driverClassName;
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + ip + ":" + port + "/" + database + (flags == null ? "" : flags));
+
+        if (driverClassName != null) {
+            config.setDriverClassName(driverClassName);
+        }
+
+        config.setJdbcUrl(
+                url == null ? "jdbc:mysql" : url +
+                "://" + ip + ":" + port + "/" + database
+                + (flags == null ? "" : flags)
+        );
+
         config.setUsername(user);
         config.setPassword(password);
 

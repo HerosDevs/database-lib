@@ -18,7 +18,7 @@ public class Director {
     public Director() {
         this.instrumentsCollection = new HashMap<>();
         this.musicians = new ArrayList<>();
-        System.out.println("[database-lib] Currently using version: 1.2.2-SNAPSHOT");
+        System.out.println("[database-lib] Currently using version: 1.2.3-SNAPSHOT");
     }
 
     public void addInstrument(String name, Instrument instrument) {
