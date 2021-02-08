@@ -11,23 +11,19 @@ import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Getter
 @SuppressWarnings({"BusyWait"})
 public class Musician extends Thread {
 
     private final Director director;
 
-    @Getter
     private Queue<Papers> queuePapers, mirrorQueuePapers;
-    @Getter
     private final Instrument instrument;
-    @Getter
     @Setter
     private int checkEvery;
-    @Getter
     @Setter
     private boolean debugMode;
     private boolean stopSignal;
-    @Getter
     private boolean running;
 
     public Musician(Director director, Instrument instrument) {

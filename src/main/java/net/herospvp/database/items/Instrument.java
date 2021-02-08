@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 
 @Getter
@@ -38,8 +39,6 @@ public class Instrument {
         config.setUsername(user);
         config.setPassword(password);
 
-        config.setMaximumPoolSize(poolSize);
-
         if (useDefaults) {
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
@@ -56,7 +55,7 @@ public class Instrument {
             proprieties.forEach(config::addDataSourceProperty);
         }
 
-        dataSource = config.getDataSource();
+        dataSource = new HikariDataSource(config);
     }
 
     public void close(Connection connection) {
