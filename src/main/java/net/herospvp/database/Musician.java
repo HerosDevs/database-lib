@@ -127,7 +127,7 @@ public class Musician extends Thread {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    instrument.close(connection, null, null);
+                    instrument.close(connection);
                     running = false;
                     clearQueues();
 

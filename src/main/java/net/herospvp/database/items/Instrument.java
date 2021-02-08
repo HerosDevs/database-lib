@@ -1,5 +1,7 @@
 package net.herospvp.database.items;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -11,40 +13,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
 
+@Getter
+@AllArgsConstructor
 public class Instrument {
 
-    @Getter
-    private final DataSource dataSource;
-    @Getter
-    private final String ip, port, user, password, database, flags, url, driverClassName;
+    private DataSource dataSource;
+    private final String ip;
+    private final String port;
+    private final String database;
+    private final String user;
+    private final String password;
+    private final String url, driver;
+    @Nullable
+    private final Map<String, String> proprieties;
+    private final boolean useDefaults;
+    private final int poolSize;
 
-    public Instrument(String ip, String port, String user, String password, String database, @Nullable String flags,
-                      @Nullable String url, @Nullable String driverClassName,
-                      @Nullable Map<String, String> properties, boolean useDefaults, int poolSize) {
-
-        this.ip = ip;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-        this.database = database;
-        this.flags = flags;
-        this.url = url;
-        this.driverClassName = driverClassName;
-
+    public void assemble() {
         HikariConfig config = new HikariConfig();
 
-        if (driverClassName != null) {
-            config.setDriverClassName(driverClassName);
-        }
-
-        config.setJdbcUrl(
-                url == null ? "jdbc:mysql" : url +
-                "://" + ip + ":" + port + "/" + database
-                + (flags == null ? "" : flags)
-        );
+        config.setDriverClassName(driver);
+        config.setJdbcUrl("jdbc:" + url + "://" + ip + ":" + port + "/" + database);
 
         config.setUsername(user);
         config.setPassword(password);
+
+        config.setMaximumPoolSize(poolSize);
 
         if (useDefaults) {
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -55,31 +49,46 @@ public class Instrument {
         if (poolSize != 0) {
             config.setMaximumPoolSize(poolSize);
         } else {
-            int count = Runtime.getRuntime().availableProcessors() * 2;
-            System.out.println("[database-lib] Using default max-pool-size: " + count);
-            config.setMaximumPoolSize(count);
+            config.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
         }
 
-        if (properties != null) {
-            properties.forEach(config::addDataSourceProperty);
+        if (proprieties != null) {
+            proprieties.forEach(config::addDataSourceProperty);
         }
 
-        dataSource = new HikariDataSource(config);
+        dataSource = config.getDataSource();
     }
 
-    public void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
+    public void close(Connection connection) {
         if (connection != null) try {
             connection.close();
         } catch (Exception ignored) {
         }
+    }
+
+    public void close(PreparedStatement preparedStatement) {
         if (preparedStatement != null) try {
             preparedStatement.close();
         } catch (Exception ignored) {
         }
+    }
+
+    public void close(ResultSet resultSet) {
         if (resultSet != null) try {
             resultSet.close();
         } catch (Exception ignored) {
         }
+    }
+
+    public void close(PreparedStatement preparedStatement, ResultSet resultSet) {
+        close(preparedStatement);
+        close(resultSet);
+    }
+
+    public void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
+        close(preparedStatement);
+        close(resultSet);
+        close(connection);
     }
 
 }
