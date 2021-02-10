@@ -19,12 +19,12 @@ public class Notes {
         return "SELECT " + field + " FROM " + table + ";";
     }
 
-    public String selectWhere(String target, Object value) {
-        return selectWhere(target, target, value);
-    }
-
     public String selectWhere(String target, String field, Object value) {
         return "SELECT " + target + " FROM " + table + " WHERE " + field + " = " + convertObj(value) + ";";
+    }
+
+    public String selectAllWhere(String field, Object value) {
+        return "SELECT * FROM " + table + " WHERE " + field + " = " + convertObj(value) + ";";
     }
 
     public String insert(String[] fields, Object[] values) {
