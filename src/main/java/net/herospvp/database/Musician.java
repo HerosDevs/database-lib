@@ -95,28 +95,27 @@ public class Musician extends Thread {
     @Override
     public void run() {
         try {
-            long time = 0;
+            int papersWritten = 0;
+            long startTime, getConnectionTime = 0, executeTime = 0;
 
             while (!stopSignal) {
 
-                Thread.sleep(checkEvery);
-
-                if (debugMode) {
-                    time = System.currentTimeMillis();
-                    System.out.println("[database-lib] JOB ON " + currentThread().getName() + " STARTED!");
+                if (queuePapers.isEmpty()) {
+                    Thread.sleep(checkEvery);
+                    continue;
                 }
+                startTime = System.currentTimeMillis();
                 updateMirror(queuePapers);
 
                 Connection connection = null;
                 try {
                     connection = instrument.getDataSource().getConnection();
+                    getConnectionTime = System.currentTimeMillis();
 
-                    if (debugMode)
-                        System.out.println("[database-lib] GETTING CONNECTION TOOK " +
-                                (System.currentTimeMillis() - time) / 1000.0 + "s");
-
-                    for (Papers paper : mirrorQueuePapers)
+                    for (Papers paper : mirrorQueuePapers) {
                         paper.writePaper(connection, instrument);
+                        papersWritten++;
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -124,9 +123,13 @@ public class Musician extends Thread {
                     instrument.close(connection);
                     clearQueues();
 
-                    if (debugMode)
-                        System.out.println("[database-lib] JOB ON " + currentThread().getName() + " COMPLETED! (" +
-                                + (System.currentTimeMillis() - time) / 1000.0 + "s)");
+                    if (debugMode && getConnectionTime != 0) {
+                        System.out.println("[database-lib]\nWorker: " + currentThread().getName() + "\n" +
+                                "Got connection in: " + (getConnectionTime - startTime) + "\n" +
+                                "Wrote: " + papersWritten + " papers (" + (System.currentTimeMillis() - executeTime) +
+                                " ms)\n[database-lib]");
+                    }
+                    papersWritten = 0;
                 }
             }
         } catch (Exception e) {
