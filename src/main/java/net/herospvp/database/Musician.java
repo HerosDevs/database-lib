@@ -123,7 +123,7 @@ public class Musician extends Thread {
                     if (debugMode && getConnectionTime != 0) {
                         System.out.println("[database-lib] Worker: " + currentThread().getName());
                         System.out.println("[database-lib] Got connection in: " + (getConnectionTime - startTime) + "ms");
-                        System.out.println("[database-lib] Wrote: " + papersWritten + " papers ("
+                        System.out.println("[database-lib] Wrote " + papersWritten + " paper(s) in "
                                         + (System.currentTimeMillis() - startTime) + " ms");
                     }
                     papersWritten = 0;
