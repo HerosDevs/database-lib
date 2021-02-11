@@ -24,6 +24,7 @@ public class Musician extends Thread {
     @Setter
     private boolean debugMode;
     private boolean stopSignal;
+    @Deprecated
     private boolean running;
 
     public Musician(Director director, Instrument instrument) {
@@ -45,7 +46,7 @@ public class Musician extends Thread {
     }
 
     private void commonInit() {
-        this.checkEvery = 500;
+        this.checkEvery = 250;
         this.queuePapers = new LinkedList<>();
         this.mirrorQueuePapers = new LinkedList<>();
         this.start();
@@ -81,7 +82,7 @@ public class Musician extends Thread {
         mirrorQueuePapers.clear();
     }
 
-
+    @Deprecated
     public void play() {
         running = true;
     }
@@ -98,10 +99,7 @@ public class Musician extends Thread {
 
             while (!stopSignal) {
 
-                if (!running) {
-                    Thread.sleep(checkEvery);
-                    continue;
-                }
+                Thread.sleep(checkEvery);
 
                 if (debugMode) {
                     time = System.currentTimeMillis();
@@ -124,7 +122,6 @@ public class Musician extends Thread {
                     e.printStackTrace();
                 } finally {
                     instrument.close(connection);
-                    running = false;
                     clearQueues();
 
                     if (debugMode)
