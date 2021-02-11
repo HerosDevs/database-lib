@@ -40,9 +40,6 @@ public class Musician extends Thread {
         this.debugMode = debugMode;
 
         commonInit();
-
-        if (debugMode)
-            System.out.println("[database-lib] Musician created! (" + 1000 / checkEvery + "/s)");
     }
 
     private void commonInit() {
@@ -96,7 +93,7 @@ public class Musician extends Thread {
     public void run() {
         try {
             int papersWritten = 0;
-            long startTime, getConnectionTime = 0, executeTime = 0;
+            long startTime, getConnectionTime = 0;
 
             while (!stopSignal) {
 
@@ -124,10 +121,10 @@ public class Musician extends Thread {
                     clearQueues();
 
                     if (debugMode && getConnectionTime != 0) {
-                        System.out.println("[database-lib]\nWorker: " + currentThread().getName() + "\n" +
-                                "Got connection in: " + (getConnectionTime - startTime) + "\n" +
-                                "Wrote: " + papersWritten + " papers (" + (System.currentTimeMillis() - executeTime) +
-                                " ms)\n[database-lib]");
+                        System.out.println("[database-lib] Worker: " + currentThread().getName());
+                        System.out.println("[database-lib] Got connection in: " + (getConnectionTime - startTime) + "ms");
+                        System.out.println("[database-lib] Wrote: " + papersWritten + " papers ("
+                                        + (System.currentTimeMillis() - startTime) + " ms");
                     }
                     papersWritten = 0;
                 }
