@@ -1,0 +1,5 @@
+name: database-lib
+version: ${project.version}
+author: Sorridi
+main: net.herospvp.database.Main
+load: STARTUP
