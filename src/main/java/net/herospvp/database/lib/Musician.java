@@ -6,6 +6,8 @@ import lombok.SneakyThrows;
 import net.herospvp.database.Main;
 import net.herospvp.database.lib.items.Instrument;
 import net.herospvp.database.lib.items.Papers;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.print.Paper;
 import java.sql.Connection;
@@ -18,33 +20,48 @@ import java.util.concurrent.*;
 public class Musician extends Thread {
 
     private Main instance;
+    private final Director director;
 
     private BlockingQueue<Papers> blockingQueue;
     private Instrument instrument;
     private final boolean debug;
     private boolean running;
 
-    public Musician(Instrument instrument) {
+    public Musician(
+            @NotNull Director director,
+            @NotNull Instrument instrument
+    ) {
         this.debug = false;
+        this.director = director;
         commonInit(instrument);
     }
 
-    public Musician(Instrument instrument, boolean debug) {
+    public Musician(
+            @NotNull Director director,
+            @NotNull Instrument instrument,
+            boolean debug
+    ) {
         this.debug = debug;
+        this.director = director;
         commonInit(instrument);
     }
 
-    private void commonInit(Instrument instrument) {
+    private void commonInit(
+            @NotNull Instrument instrument
+    ) {
         this.blockingQueue = new LinkedBlockingQueue<>();
         this.instrument = instrument;
         this.running = true;
 
-        currentThread().setName("M-#" + Main.getPlugin(Main.class).getDirector());
+        currentThread().setName("M-#" + director.getMusicians().size());
 
         this.start();
     }
 
-    public void offer(Papers papers) {
+    public void offer(
+            @Nullable Papers papers
+    ) {
+        if (papers == null) return;
         blockingQueue.offer(papers);
     }
 
