@@ -26,12 +26,25 @@ public class Musician extends Thread {
     private Instrument instrument;
     private final boolean debug;
     private boolean running;
+    private final int timeToWait;
 
     public Musician(
             @NotNull Director director,
             @NotNull Instrument instrument
     ) {
         this.debug = false;
+        this.timeToWait = 100;
+        this.director = director;
+        commonInit(instrument);
+    }
+
+    public Musician(
+            @NotNull Director director,
+            @NotNull Instrument instrument,
+            int timeToWait
+    ) {
+        this.debug = false;
+        this.timeToWait = timeToWait;
         this.director = director;
         commonInit(instrument);
     }
@@ -42,6 +55,19 @@ public class Musician extends Thread {
             boolean debug
     ) {
         this.debug = debug;
+        this.timeToWait = 100;
+        this.director = director;
+        commonInit(instrument);
+    }
+
+    public Musician(
+            @NotNull Director director,
+            @NotNull Instrument instrument,
+            int timeToWait,
+            boolean debug
+    ) {
+        this.debug = false;
+        this.timeToWait = timeToWait;
         this.director = director;
         commonInit(instrument);
     }
@@ -75,7 +101,7 @@ public class Musician extends Thread {
         while (running) {
 
             if (blockingQueue.isEmpty()) {
-                Thread.sleep(100);
+                Thread.sleep(timeToWait);
                 continue;
             }
 
