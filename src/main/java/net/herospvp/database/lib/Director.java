@@ -1,7 +1,6 @@
 package net.herospvp.database.lib;
 
 import lombok.Getter;
-import net.herospvp.database.Main;
 import net.herospvp.database.lib.items.Instrument;
 import org.jetbrains.annotations.NotNull;
 

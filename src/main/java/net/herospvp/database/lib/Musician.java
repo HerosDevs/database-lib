@@ -1,25 +1,21 @@
 package net.herospvp.database.lib;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
-import net.herospvp.database.Main;
+import net.herospvp.database.DatabaseLib;
 import net.herospvp.database.lib.items.Instrument;
 import net.herospvp.database.lib.items.Papers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.print.Paper;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Queue;
 import java.util.concurrent.*;
 
 @SuppressWarnings({"BusyWait", "unused"})
 @Getter
 public class Musician extends Thread {
 
-    private Main instance;
+    private DatabaseLib instance;
     private final Director director;
 
     private BlockingQueue<Papers> blockingQueue;

@@ -1,7 +1,6 @@
 package net.herospvp.database.lib.items;
 
 import lombok.SneakyThrows;
-import net.herospvp.database.Main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.zaxxer.hikari.HikariConfig;

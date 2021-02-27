@@ -3,3 +3,6 @@ version: ${project.version}
 author: Sorridi
 main: net.herospvp.database.Main
 load: STARTUP
+commands:
+  database:
+    permission: herospvp.admin
