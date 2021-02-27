@@ -1,7 +1,7 @@
 name: database-lib
 version: ${project.version}
 author: Sorridi
-main: net.herospvp.database.Main
+main: net.herospvp.database.DatabaseLib
 load: STARTUP
 commands:
   database:
