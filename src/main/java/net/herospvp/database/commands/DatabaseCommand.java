@@ -18,23 +18,21 @@ public class DatabaseCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender,
-                             @NotNull Command command,
-                             @NotNull String s,
-                             @NotNull String[] strings
+    public boolean onCommand(
+            @NotNull CommandSender commandSender,
+            @NotNull Command command,
+            @NotNull String s,
+            @NotNull String[] strings
     ) {
 
         Director director = instance.getDirector();
 
         commandSender.sendMessage(
                 ChatColor.RED +
-                "Instruments totali: " +
-                director.getInstrumentsCollection().size()
-        );
-        commandSender.sendMessage(
-                ChatColor.RED +
-                "Musicians totali: " +
-                director.getMusicians().size()
+                "Versione: " + instance.getDescription().getVersion() +
+                "\nInstruments totali: " + director.getInstrumentsCollection().size() +
+                "\nMusicians totali: " + director.getMusicians().size() +
+                "\nRepository: https://github.com/HerosDevs/database-lib"
         );
 
         return false;

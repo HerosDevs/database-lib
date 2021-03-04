@@ -75,7 +75,8 @@ public class Musician extends Thread {
         this.instrument = instrument;
         this.running = true;
 
-        currentThread().setName("M-#" + director.getMusicians().size());
+        this.setName("M-#" + director.getMusicians().size());
+        director.addMusician(this);
 
         this.start();
     }
@@ -120,7 +121,7 @@ public class Musician extends Thread {
             }
 
             if (debug) {
-                System.out.println("[database-lib] Worker: " + currentThread().getName());
+                System.out.println("[database-lib] Worker: " + this.getName());
                 System.out.println("[database-lib] Wrote " + i + " paper(s) in "
                         + (System.currentTimeMillis() - time) + " ms");
             }
