@@ -28,7 +28,7 @@ public class Instrument {
             @NotNull String port,
             @NotNull String database,
             @NotNull String user,
-            @NotNull String password,
+            @Nullable String password,
             @NotNull String url,
             @NotNull String driver,
             @Nullable Map<String, String> properties,
@@ -78,7 +78,6 @@ public class Instrument {
 
     @SneakyThrows
     public <G> void close(G generic) {
-
         if (generic instanceof PreparedStatement) {
             ((PreparedStatement) generic).close();
         }
@@ -90,15 +89,15 @@ public class Instrument {
         }
     }
 
-    public void close(PreparedStatement preparedStatement, ResultSet resultSet) {
-        close(preparedStatement);
-        close(resultSet);
+    public <G> void close(G generic, G generic1) {
+        close(generic);
+        close(generic1);
     }
 
-    public void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
-        close(preparedStatement);
-        close(resultSet);
-        close(connection);
+    public <G> void close(G generic, G generic1, G generic2) {
+        close(generic);
+        close(generic1);
+        close(generic2);
     }
 
 }

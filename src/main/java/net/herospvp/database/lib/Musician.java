@@ -1,6 +1,7 @@
 package net.herospvp.database.lib;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import net.herospvp.database.DatabaseLib;
 import net.herospvp.database.lib.items.Instrument;
@@ -86,6 +87,10 @@ public class Musician extends Thread {
     ) {
         if (papers == null) return;
         blockingQueue.offer(papers);
+    }
+
+    public void stopRunning() {
+        running = false;
     }
 
     @SneakyThrows

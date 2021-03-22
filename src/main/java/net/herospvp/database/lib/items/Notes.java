@@ -19,6 +19,10 @@ public class Notes {
         return "SELECT * FROM " + table + ";";
     }
 
+    public String truncate() {
+        return "TRUNCATE TABLE " + table + ";";
+    }
+
     public String select(
             @NotNull String field
     ) {
@@ -33,11 +37,26 @@ public class Notes {
         return "SELECT " + target + " FROM " + table + " WHERE " + field + " = " + convertObj(value) + ";";
     }
 
+    public String deleteWhere(
+            @NotNull String target,
+            @NotNull String field,
+            @NotNull Object value
+    ) {
+        return "DELETE FROM " + table + " WHERE " + field + " = " + convertObj(value) + ";";
+    }
+
     public String pendingSelectWhere(
             @NotNull String target,
             @NotNull String field
     ) {
         return "SELECT " + target + " FROM " + table + " WHERE " + field + " = ?;";
+    }
+
+    public String pendingDeleteWhere(
+            @NotNull String target,
+            @NotNull String field
+    ) {
+        return "DELETE FROM " + table + " WHERE " + field + " = ?;";
     }
 
     public String selectAllWhere(
